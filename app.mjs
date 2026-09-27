@@ -38,7 +38,7 @@ function tick() {
   const elapsed = performance.now() - startedAt;
   const limit = timeLimitFor(questionLevel);
   if (elapsed >= limit) { finish('timeout'); return; }
-  const urgent = elapsed >= limit * 0.75;
+  const urgent = elapsed >= limit * 0.65;
   $('timer').textContent = `${((limit - elapsed) / 1000).toFixed(1).replace('.', ',')} с`;
   $('timer').classList.toggle('urgent', urgent);
   $('timer-panel').classList.toggle('urgent', urgent);
