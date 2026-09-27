@@ -38,11 +38,14 @@ function tick() {
   const elapsed = performance.now() - startedAt;
   const limit = timeLimitFor(questionLevel);
   if (elapsed >= limit) { finish('timeout'); return; }
+  const urgent = elapsed >= limit * 0.75;
   $('timer').textContent = `${((limit - elapsed) / 1000).toFixed(1).replace('.', ',')} с`;
-  $('timer').classList.toggle('urgent', elapsed >= limit * 0.75);
+  $('timer').classList.toggle('urgent', urgent);
+  $('timer-panel').classList.toggle('urgent', urgent);
+  $('timer-label').textContent = urgent ? 'УАҚЫТ АЗ!' : 'ҚАЛҒАН УАҚЫТ';
   $('reward').textContent = `+${format(pointsFor(elapsed, questionLevel))}`;
   $('speed-fill').style.width = `${(1 - elapsed / limit) * 100}%`;
-  $('speed-fill').classList.toggle('urgent', elapsed >= limit * 0.75);
+  $('speed-fill').classList.toggle('urgent', urgent);
   frame = requestAnimationFrame(tick);
 }
 
