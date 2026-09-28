@@ -1,6 +1,6 @@
 import { createQuestion, levelFor, pointsFor, timeLimitFor, evaluateAnswer, shareText, whatsappUrl, readChallenge } from './game.mjs?v=4';
 import { createAnalytics } from './analytics.mjs?v=1';
-import { analyticsConfig } from './analytics-config.mjs?v=1';
+import { analyticsConfig } from './analytics-config.mjs?v=2';
 
 const $ = id => document.getElementById(id);
 const format = number => new Intl.NumberFormat('kk-KZ').format(number);
