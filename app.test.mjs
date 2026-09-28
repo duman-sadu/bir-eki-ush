@@ -5,6 +5,7 @@ import vm from 'node:vm';
 import * as game from './game.mjs';
 
 function browser(address = 'https://example.com/') {
+  const tracked = [];
   let now = 0, nextId = 0;
   const timers = new Map();
   class Element {
@@ -43,6 +44,7 @@ function browser(address = 'https://example.com/') {
     createElement: () => new Element(), addEventListener() {},
   };
   const context = vm.createContext({
+    analyticsConfig: {}, createAnalytics: () => ({ track: (event, properties) => tracked.push({ event, properties }) }),
     ...game, document, location: { href: address }, HTMLElement: Element,
     window: { scrollTo() {} }, localStorage: { getItem() { return null; }, setItem() {} },
     performance: { now: () => now },
@@ -50,10 +52,10 @@ function browser(address = 'https://example.com/') {
     setTimeout: (fn, delay) => { const id = ++nextId; timers.set(id, { fn, at: now + delay }); return id; },
     clearTimeout: id => timers.delete(id),
   });
-  const source = readFileSync(new URL('./app.mjs', import.meta.url), 'utf8').replace(/^import .*;\r?\n/, '');
+  const source = readFileSync(new URL('./app.mjs', import.meta.url), 'utf8').replace(/^import .*;\r?\n/gm, '');
   vm.runInContext(source, context);
   return {
-    get, document, run: code => vm.runInContext(code, context),
+    get, document, tracked, run: code => vm.runInContext(code, context),
     advance(ms) {
       const end = now + ms;
       while (true) {
@@ -96,6 +98,28 @@ test('countdown blocks answers, starts a full timer, and resets on replay', () =
   ui.advance(3000);
   assert.equal(ui.get('timer').textContent, '8,0 с');
   assert.equal(ui.get('timer-panel').classList.contains('urgent'), false);
+});
+
+test('analytics counts actual starts, one finish and share clicks without player names', () => {
+  const ui = browser();
+  assert.equal(ui.tracked[0].event, 'page_view');
+  ui.get('player-name').value = 'Private player';
+  ui.get('start').events.click();
+  ui.get('start').events.click();
+  assert.equal(ui.tracked.filter(e => e.event === 'start_clicked').length, 1);
+  assert.equal(ui.tracked.filter(e => e.event === 'game_started').length, 0);
+  ui.advance(3000);
+  assert.equal(ui.tracked.filter(e => e.event === 'game_started').length, 1);
+  ui.advance(1000);
+  ui.run('answer(question.answer === 1 ? 2 : 1); finish("wrong")');
+  const finished = ui.tracked.filter(e => e.event === 'game_finished');
+  assert.equal(finished.length, 1);
+  assert.equal(finished[0].properties.reason, 'wrong');
+  assert.equal(finished[0].properties.duration_ms, 1000);
+  assert.equal(finished[0].properties.level, 1);
+  ui.get('share-whatsapp').events.click();
+  assert.equal(ui.tracked.at(-1).event, 'share_clicked');
+  assert.ok(!JSON.stringify(ui.tracked).includes('Private player'));
 });
 
 test('friend challenge tracks the score and sharing replaces the incoming result', () => {

@@ -7,6 +7,8 @@ const files = new Map([
   ['/style.css', ['style.css', 'text/css; charset=utf-8']],
   ['/app.mjs', ['app.mjs', 'text/javascript; charset=utf-8']],
   ['/game.mjs', ['game.mjs', 'text/javascript; charset=utf-8']],
+  ['/analytics.mjs', ['analytics.mjs', 'text/javascript; charset=utf-8']],
+  ['/analytics-config.mjs', ['analytics-config.mjs', 'text/javascript; charset=utf-8']],
 ]);
 const server = http.createServer(async (request, response) => {
   const path = new URL(request.url, 'http://localhost').pathname;
