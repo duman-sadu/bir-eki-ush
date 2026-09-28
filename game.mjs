@@ -30,6 +30,23 @@ export function gameUrl(address) {
   } catch { return ''; }
 }
 
+export function challengeUrl(address, name, score) {
+  const base = gameUrl(address);
+  if (!base) return '';
+  const url = new URL(base);
+  url.hash = new URLSearchParams({ challenge: '1', name: normalizeName(name), score: String(score) }).toString();
+  return url.href;
+}
+
+export function readChallenge(address) {
+  try {
+    const params = new URLSearchParams(new URL(address).hash.slice(1));
+    const rawScore = params.get('score');
+    if (params.get('challenge') !== '1' || !/^(0|[1-9]\d{0,11})$/.test(rawScore ?? '')) return null;
+    return { name: normalizeName(params.get('name') || ''), score: Number(rawScore) };
+  } catch { return null; }
+}
+
 export function shareText({ name, score, correct, level, address }) {
   const format = number => new Intl.NumberFormat('kk-KZ').format(number);
   const lines = [
@@ -39,7 +56,7 @@ export function shareText({ name, score, correct, level, address }) {
     `Деңгей: ${level} · Дұрыс жауап: ${correct}`,
     'Менің ұпайымнан асып көр! 💪',
   ];
-  const link = gameUrl(address);
+  const link = challengeUrl(address, name, score);
   if (link) lines.push(`Ойна: ${link}`);
   return lines.join('\n');
 }

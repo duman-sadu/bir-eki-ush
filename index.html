@@ -13,7 +13,7 @@
   <meta property="og:url" content="https://duman-sadu.github.io/bir-eki-ush/">
   <meta property="og:locale" content="kk_KZ">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23dafa70'/%3E%3Ctext x='32' y='46' text-anchor='middle' font-size='46' font-family='Arial' font-weight='bold'%3E3%3C/text%3E%3C/svg%3E">
-  <link rel="stylesheet" href="style.css?v=2">
+  <link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
   <main class="app">
@@ -21,10 +21,10 @@
     <section class="intro"><span class="eyebrow"><span class="dot"></span> ШАҒЫН ОЙЫН. ШАПШАҢ ОЙ.</span><h1>Оңай сияқты.<br>Ал сен <span>үлгересің бе?</span></h1><p>Есепте. Үш жауаптың бірін таңда.<br>Жылдамдығыңды көрсет, достарыңмен жарыс!</p></section>
     <section class="game" aria-label="Математикалық ойын">
       <div class="stats"><div><span class="label">ҰПАЙЫҢ</span><strong id="score">0</strong></div><div class="record"><span class="label">ЖЕКЕ РЕКОРД ↗</span><strong id="best">0</strong></div></div>
-      <div class="play-area">
+      <div class="play-area"><aside id="challenge" class="challenge" hidden><span class="eyebrow">ДОСЫҢ СЕНІ ЖАРЫСҚА ШАҚЫРДЫ</span><strong id="challenge-title"></strong><p id="challenge-progress" role="status" aria-live="polite"></p></aside>
         <div class="round-info"><span class="level-pill">ДЕҢГЕЙ <b id="level">01</b></span><span class="attempt-note">БІР ҒАНА МҮМКІНДІК</span></div>
         <div id="player-panel" class="player-panel"><label for="player-name">Атың</label><input id="player-name" type="text" maxlength="32" autocomplete="given-name" placeholder="Атыңды жаз" aria-describedby="name-hint"><small id="name-hint">Атың бөліскен нәтижеңде көрсетіледі.</small></div><div id="welcome" class="welcome"><div class="sample">1 + 2 <span>= ?</span></div><p>Үш батырма. Бір дұрыс жауап.</p><button id="start" class="primary">Бастау <span>↗</span></button><small>Алғашында 8 секунд. Кейін уақыт аз, ұпай көп.</small></div>
-        <div id="playing" hidden><div id="timer-panel" class="question-top"><span id="timer-label">ҚАЛҒАН УАҚЫТ</span><span id="timer" role="timer" aria-label="Қалған уақыт">8,0 с</span></div><div id="question" class="question" aria-label="Есеп"></div><div class="reward"><span>Жауап үшін ұпай</span><strong id="reward">+150</strong></div><div class="speed-track"><div id="speed-fill"></div></div><div class="answers" aria-label="Жауап нұсқалары"><button data-answer="1">1</button><button data-answer="2">2</button><button data-answer="3">3</button></div></div>
+        <div id="countdown" class="countdown" hidden><span class="eyebrow">ДАЙЫНДАЛ!</span><strong id="countdown-number" role="status" aria-live="polite">3</strong><p>Есеп шыққанда уақыт басталады</p></div><div id="playing" hidden><div id="timer-panel" class="question-top"><span id="timer-label">ҚАЛҒАН УАҚЫТ</span><span id="timer" role="timer" aria-label="Қалған уақыт">8,0 с</span></div><div id="question" class="question" aria-label="Есеп"></div><div class="reward"><span>Жауап үшін ұпай</span><strong id="reward">+150</strong></div><div class="speed-track"><div id="speed-fill"></div></div><div class="answers" aria-label="Жауап нұсқалары"><button data-answer="1">1</button><button data-answer="2">2</button><button data-answer="3">3</button></div></div>
         <div id="finished" class="finished" hidden><span class="eyebrow">СЕНІҢ НӘТИЖЕҢ</span><h2 id="finish-title">Жақсы ойын!</h2><strong id="final-score">0</strong><p id="summary"></p><a id="share-whatsapp" class="share-button" target="_blank" rel="noopener noreferrer">WhatsApp арқылы бөлісу <span aria-hidden="true">↗</span></a><p class="share-hint">Досыңа жібер. Ұпайыңнан асып көрсін!</p><label class="share-label" for="share-preview">Досыңа жіберілетін мәтін</label><textarea id="share-preview" class="share-preview" readonly rows="5"></textarea><button id="restart" class="primary">Қайта ойнау <span>↻</span></button></div>
         <div id="feedback" class="feedback" role="status" aria-live="polite">Жаңа рекордың осы жерден басталады</div>
       </div>
@@ -33,9 +33,10 @@
     <section class="rules" aria-label="Ойын ережелері"><div><span class="rule-icon">1 2 3</span><h3>Тек үш сан</h3><p>Есепте де, жауапта да<br>тек 1, 2 немесе 3.</p></div><div><span class="rule-icon">↗</span><h3>Шексіз күрделілік</h3><p>Әр 3 дұрыс жауаптан<br>кейін бір сан қосылады.</p></div><div><span class="rule-icon">◷</span><h3>Жылдамдық маңызды</h3><p>Деңгей өскен сайын ұпай көп,<br>бірақ уақыт аз.</p></div></section>
     <p class="end-rule">Қате жауап берсең немесе уақыт бітсе, ойын аяқталады.</p><footer><span>ЕСЕПТЕ. ОЙЛАН. ЖАРЫС.</span><span>1 + 2 = <b>сенің қолыңнан келеді</b></span></footer>
   </main>
-  <script type="module" src="app.mjs?v=3"></script>
+  <script type="module" src="app.mjs?v=4"></script>
 </body>
 </html>
+
 
 
 

@@ -1,4 +1,4 @@
-import { createQuestion, levelFor, pointsFor, timeLimitFor, evaluateAnswer, shareText, whatsappUrl } from './game.mjs';
+import { createQuestion, levelFor, pointsFor, timeLimitFor, evaluateAnswer, shareText, whatsappUrl, readChallenge } from './game.mjs?v=4';
 
 const $ = id => document.getElementById(id);
 const format = number => new Intl.NumberFormat('kk-KZ').format(number);
@@ -8,8 +8,21 @@ try { best = Math.max(0, Number(localStorage.getItem(bestKey)) || 0); } catch {}
 $('best').textContent = format(best);
 let score = 0, correct = 0, question, questionLevel, startedAt, running = false, locked = false;
 let frame, nextTimeout;
+let preparing = false;
+const challenge = readChallenge(location.href);
 const answerButtons = [...document.querySelectorAll('[data-answer]')];
 try { $('player-name').value = (localStorage.getItem('123-player-name') || '').slice(0, 32); } catch {}
+
+function refreshChallenge() {
+  $('challenge').hidden = !challenge;
+  if (!challenge) return;
+  $('challenge-title').textContent = `${challenge.name}: ${format(challenge.score)} ұпай`;
+  $('challenge-progress').textContent = score > challenge.score
+    ? `Озып кеттің! +${format(score - challenge.score)} ұпай`
+    : `Озып кету үшін тағы ${format(challenge.score - score + 1)} ұпай жина!`;
+  $('challenge').classList.toggle('beaten', score > challenge.score);
+}
+refreshChallenge();
 
 function updateShare() {
   const address = document.querySelector('link[rel="canonical"]')?.href || location.href;
@@ -27,6 +40,7 @@ $('player-name').addEventListener('keydown', event => {
 });
 
 function refreshStats() {
+  refreshChallenge();
   $('score').textContent = format(score);
   $('level').textContent = String(levelFor(correct)).padStart(2, '0');
   $('progress-text').textContent = `Келесі деңгейге дейін: ${3 - correct % 3} дұрыс жауап`;
@@ -71,22 +85,47 @@ function nextQuestion() {
 }
 
 function start() {
+  if (running || preparing) return;
   clearTimeout(nextTimeout);
   cancelAnimationFrame(frame);
-  score = 0; correct = 0; running = true;
+  score = 0; correct = 0; running = false; preparing = true; locked = true;
   $('welcome').hidden = true;
   $('finished').hidden = true;
-  $('playing').hidden = false;
+  $('playing').hidden = true;
+  $('countdown').hidden = false;
+  document.body.classList.add('in-game');
+  window.scrollTo({ top: 0, behavior: 'instant' });
   $('player-panel').hidden = true;
   $('player-name').blur();
   $('feedback').className = 'feedback';
   $('feedback').textContent = 'Жауапты таңда: 1, 2 немесе 3';
   refreshStats();
-  nextQuestion();
+  let remaining = 3;
+  $('countdown-number').textContent = String(remaining);
+  const count = () => {
+    if (document.hidden) {
+      remaining = 3;
+    } else {
+      remaining--;
+    }
+    if (remaining === 0) {
+      preparing = false;
+      running = true;
+      $('countdown').hidden = true;
+      $('playing').hidden = false;
+      nextQuestion();
+      return;
+    }
+    $('countdown-number').textContent = String(remaining);
+    nextTimeout = setTimeout(count, 1000);
+  };
+  nextTimeout = setTimeout(count, 1000);
 }
 
 function finish(reason) {
   running = false;
+  preparing = false;
+  document.body.classList.remove('in-game');
   locked = true;
   cancelAnimationFrame(frame);
   clearTimeout(nextTimeout);
