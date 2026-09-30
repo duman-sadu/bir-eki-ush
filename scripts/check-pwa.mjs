@@ -13,7 +13,7 @@ const server = http.createServer(async (request, response) => {
   if (!path.startsWith('/bir-eki-ush/') || !assets.has(asset)) { response.writeHead(404); response.end(); return; }
   try {
     let content = await readFile(new URL(`../${asset}`, import.meta.url));
-    if (asset === 'sw.js') content = content.toString().replace('bir-eki-ush-shell-v1', `bir-eki-ush-shell-v${revision}`);
+    if (asset === 'sw.js') content = content.toString().replace(/bir-eki-ush-shell-v\d+/, `bir-eki-ush-shell-v${revision}`);
     const mime = asset.endsWith('.png') ? 'image/png' : asset.endsWith('.html') ? 'text/html' : asset.endsWith('.css') ? 'text/css' : asset.endsWith('.webmanifest') ? 'application/manifest+json' : 'text/javascript';
     response.writeHead(200, { 'Content-Type': mime, 'Cache-Control': 'no-store' });
     response.end(content);

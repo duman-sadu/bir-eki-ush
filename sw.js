@@ -1,9 +1,9 @@
 // Bump this version and update SHELL whenever a deployed app asset changes.
-const CACHE = 'bir-eki-ush-shell-v1';
+const CACHE = 'bir-eki-ush-shell-v2';
 const PREFIX = 'bir-eki-ush-shell-';
 const ROOT = new URL('./', self.location.href);
 const SHELL = [
-  './', 'index.html', 'style.css?v=7', 'app.mjs?v=7', 'game.mjs?v=4',
+  './', 'index.html', 'style.css?v=8', 'app.mjs?v=7', 'game.mjs?v=4',
   'analytics.mjs?v=1', 'analytics-config.mjs?v=2', 'pwa.mjs?v=1',
   'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png',
 ];
