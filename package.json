@@ -3,5 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "scripts": { "test": "node --test", "start": "node server.mjs" }
+  "scripts": {
+    "test": "node --test",
+    "start": "node server.mjs",
+    "test:pwa": "node scripts/check-pwa.mjs",
+    "icons": "node scripts/build-icons.mjs"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.63.0"
+  }
 }
